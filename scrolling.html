@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <title>Scrolling</title>
+    <style>
+
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        h1{
+            text-align: center;
+        }
+
+        #scroll-div{
+            width: 600px;
+            height: 400px;
+            padding: 30px;
+            overflow: scroll;
+            margin: 50px auto;
+            line-height: 28px;
+            text-align: center;
+        }
+
+        li{
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Infinite Scroll</h1>
+
+    <div id="scroll-div">
+
+    </div>
+
+    <script type="text/javascript">
+
+        // INITIALIZING COUNT
+        let count = 1;
+
+        // FUNCTION TO ADD ITEMS TO DIV
+        function addItems(div){
+
+            for (let i = 0; i < 25; i++){
+                const elem = document.createElement("li");
+                elem.textContent = `Masai student ${count}`;
+                count++;
+                div.append(elem);    
+            }
+            
+        }
+
+        window.addEventListener("load", () => {
+            const div = document.getElementById("scroll-div");
+            let count = 0;
+
+            // ADDING INITIAL 25 ITEMS TO DIV
+            addItems(div);
+
+            // EVENT LISTENER SCROLL TO DIV
+            div.addEventListener("scroll", () => {
+                count++;
+                let scrollNum = div.scrollTop;
+                let height = div.clientHeight;
+                let scHeight = div.scrollHeight;
+                
+                console.log(scrollNum, height, scHeight);
+
+                if (scrollNum + height >= scHeight){
+                    const throttledScroll = throttler(addItems(div, 1000));
+                    throttledScroll();
+                }
+            })
+            
+        })
+
+        // FUNCTION TO THROTTLE A FUNCTION
+        function throttler(fn, delay){
+            let lastCall = Date.now();
+            return function(){
+                let now = Date.now();
+                if ((now - lastCall) > delay){
+                    lastCall = now;
+                    fn();
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
